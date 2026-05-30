@@ -1,5 +1,4 @@
-import commands.Command
-import commands.parse
+import commands.*
 fun main() {
     val shell= Shell()
     while (true) {
