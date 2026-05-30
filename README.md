@@ -1,2 +1,2 @@
-# kShell
+# Kösh
  Kotlin REPL
