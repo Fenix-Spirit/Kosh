@@ -5,6 +5,7 @@ fun main() {
         print("Kösh>>")
         val input:String = readln().trim()
         val cmd: Command = parse(input)
-        shell.execute(cmd)
+        val res:ShellCommand=shell.prepare(cmd)
+        shell.execute(res,cmd)
     }
 }

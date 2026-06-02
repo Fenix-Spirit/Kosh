@@ -1,18 +1,28 @@
 import commands.Command
+import java.time.LocalDateTime
+import kotlin.system.exitProcess
 
 class Shell {
     private val history: MutableList<String> = mutableListOf()
     private var currentDir: String = "/"
-    fun execute(cmd: Command) {
-        history.add(cmd.name+" "+cmd.args.joinToString(" "))
-        return when (cmd.name) {
-            "ChangeDir" -> {
-                currentDir = cmd.args[0]
+    fun prepare(cmd: Command):ShellCommand = when (cmd.name) {
+        "quit" -> ShellCommand.ShellExit
+        "exit" -> ShellCommand.ShellExit
+        "history"->ShellCommand.ShellHistory
+        else -> ShellCommand.UnknownCommand(cmd.name)
+    }
+    fun execute(prepared:ShellCommand,cmd: Command ){
+        when(prepared){
+            is ShellCommand.ShellExit -> exitProcess(0)
+            is ShellCommand.ShellChangeDir -> currentDir=prepared.path
+            is ShellCommand.ShellHistory -> {
+                for (h in history) {
+                    println(h)
+                }
             }
-            "ListDir" -> {
-
-            }
-            else -> println("unknown command")
+            is ShellCommand.ShellListDir -> TODO()
+            is ShellCommand.UnknownCommand -> println("Unknown command: ${prepared.cmd}")
         }
+        history.add((LocalDateTime.now()).toString()+" >>> "+cmd.raw)
     }
 }
