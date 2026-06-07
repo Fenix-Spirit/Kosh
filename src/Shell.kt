@@ -6,9 +6,10 @@ class Shell {
     private val history: MutableList<String> = mutableListOf()
     private var currentDir: String = "/"
     fun prepare(cmd: Command):ShellCommand = when (cmd.name) {
-        "quit" -> ShellCommand.ShellExit
-        "exit" -> ShellCommand.ShellExit
+        "quit","exit" -> ShellCommand.ShellExit
         "history"->ShellCommand.ShellHistory
+        "ldir" ->ShellCommand.ShellListDir(currentDir)
+        "cdir" ->ShellCommand.ShellChangeDir(cmd.args[0])
         else -> ShellCommand.UnknownCommand(cmd.name)
     }
     fun execute(prepared:ShellCommand,cmd: Command ){
@@ -20,7 +21,7 @@ class Shell {
                     println(h)
                 }
             }
-            is ShellCommand.ShellListDir -> TODO()
+            is ShellCommand.ShellListDir -> {}
             is ShellCommand.UnknownCommand -> println("Unknown command: ${prepared.cmd}")
         }
         history.add((LocalDateTime.now()).toString()+" >>> "+cmd.raw)
