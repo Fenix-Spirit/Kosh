@@ -3,7 +3,7 @@ import java.time.LocalDateTime
 import kotlin.system.exitProcess
 
 class Shell {
-    private val history: MutableList<String> = mutableListOf()
+    private val history: MutableMap<String, String> = mutableMapOf()
     private var currentDir: String = "/"
     fun prepare(cmd: Command):ShellCommand = when (cmd.name) {
         "quit","exit" -> ShellCommand.ShellExit
@@ -17,13 +17,13 @@ class Shell {
             is ShellCommand.ShellExit -> exitProcess(0)
             is ShellCommand.ShellChangeDir -> currentDir=prepared.path
             is ShellCommand.ShellHistory -> {
-                for (h in history) {
-                    println(h)
+                for ((key,value) in history) {
+                    println("$key --> $value")
                 }
             }
             is ShellCommand.ShellListDir -> {}
             is ShellCommand.UnknownCommand -> println("Unknown command: ${prepared.cmd}")
         }
-        history.add((LocalDateTime.now()).toString()+" >>> "+cmd.raw)
+        history[(LocalDateTime.now()).toString()] = cmd.raw
     }
 }
