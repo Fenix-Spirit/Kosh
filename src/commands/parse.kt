@@ -8,7 +8,6 @@ fun parse(input: String): Command {
     for (arg in args) {
         if (arg.startsWith("-")) {
           flags.add(arg)
-
         }
     }
     return Command(name, flags, args, input)
