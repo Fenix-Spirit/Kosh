@@ -1,4 +1,3 @@
-//this is where commands are defined
 sealed class ShellCommand {
     //object
     object ShellHistory:ShellCommand()

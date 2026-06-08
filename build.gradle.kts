@@ -2,10 +2,8 @@ plugins {
     kotlin("jvm") version "2.4.0-RC"
     application
 }
-
-group = "com.github.kosh"
-version = "1.0-SNAPSHOT"
-
+group = "com.spiritfenix.kosh"
+version = "0.2.1"
 repositories {
     mavenCentral()
 }
@@ -33,7 +31,6 @@ application {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
-        // Enable parallel backend for faster compilation
         freeCompilerArgs.add("-Xbackend-threads=0")
     }
 }
