@@ -1,40 +1,50 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 plugins {
-    kotlin("jvm") version "2.4.0-RC"
-    application
+    kotlin("multiplatform") version "2.1.20"
 }
 group = "com.spiritfenix.kosh"
-version = "0.2.1"
+version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
 }
-
-dependencies {
-    implementation(kotlin("stdlib"))
-    testImplementation(kotlin("test"))
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
-}
+val isMac = System.getProperty("os.name").contains("Mac", ignoreCase = true)
 kotlin {
-    jvmToolchain(26)
-}
-
-sourceSets {
-    main {
-        kotlin {
-            setSrcDirs(listOf("src"))
+    linuxX64 {
+        binaries { executable { entryPoint = "main" } }
+    }
+    mingwX64 {
+        binaries { executable { entryPoint = "main" } }
+    }
+    if (isMac) {
+        macosArm64 {
+            binaries { executable { entryPoint = "main" } }
+        }
+    }
+    targets.withType<KotlinNativeTarget>().configureEach {
+        binaries.configureEach {
+            freeCompilerArgs += "-Xbackend-threads=0"
+        }
+    }
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.6.0")
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
         }
     }
 }
 
-application {
-    mainClass.set("MainKt")
+tasks.register("buildAll") {
+    dependsOn("linuxX64Binaries", "mingwX64Binaries")
+    if (isMac) dependsOn("macosArm64Binaries")
 }
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    compilerOptions {
-        freeCompilerArgs.add("-Xbackend-threads=0")
-    }
-}
-
-tasks.test {
-    useJUnitPlatform()
+tasks.wrapper {
+    gradleVersion = "9.5.0"
+    distributionType = Wrapper.DistributionType.BIN
 }

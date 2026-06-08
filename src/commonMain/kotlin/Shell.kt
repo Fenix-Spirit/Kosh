@@ -2,6 +2,8 @@ import commands.Command
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
 import kotlin.system.exitProcess
 class Shell {
     private val history: MutableMap<String, String> = mutableMapOf()
@@ -25,9 +27,8 @@ class Shell {
             }
             is ShellCommand.ShellChangeDir -> currentDir=prepared.path
             is ShellCommand.ShellListDir -> {
-                val dir=java.io.File(prepared.path)
-                dir.listFiles()?.forEach { println(it.name) } ?: println("No such directory/Directory is empty")
-            }
+                val path=Path(prepared.path)
+                SystemFileSystem.list(path).forEach { println(it.name) }            }
             is ShellCommand.ShellDir -> println(currentDir)
             is ShellCommand.ShellPrint -> println(prepared.msg)
             is ShellCommand.UnknownCommand -> println("Unknown command: ${prepared.cmd}")

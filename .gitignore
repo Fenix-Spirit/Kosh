@@ -3,6 +3,7 @@
 build/
 out/
 bin/
+.kotlin
 
 # IDE files
 .idea/
