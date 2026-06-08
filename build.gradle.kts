@@ -20,11 +20,6 @@ kotlin {
             binaries { executable { entryPoint = "main" } }
         }
     }
-    targets.withType<KotlinNativeTarget>().configureEach {
-        binaries.configureEach {
-            freeCompilerArgs += "-Xbackend-threads=0"
-        }
-    }
     sourceSets {
         commonMain {
             dependencies {
