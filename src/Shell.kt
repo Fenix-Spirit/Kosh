@@ -1,7 +1,8 @@
 import commands.Command
-import java.time.LocalDateTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.system.exitProcess
-
 class Shell {
     private val history: MutableMap<String, String> = mutableMapOf()
     private var currentDir: String = "/"
@@ -31,6 +32,6 @@ class Shell {
             is ShellCommand.ShellPrint -> println(prepared.msg)
             is ShellCommand.UnknownCommand -> println("Unknown command: ${prepared.cmd}")
         }
-        history[(LocalDateTime.now()).toString()] = cmd.raw
+        history[(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())).toString()] = cmd.raw
     }
 }
