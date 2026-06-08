@@ -11,6 +11,7 @@ class Shell {
         "ldir" ->ShellCommand.ShellListDir(if (cmd.args.isEmpty()) currentDir else cmd.args[0])
         "cdir" ->ShellCommand.ShellChangeDir(cmd.args[0])
         "pwd" ->ShellCommand.ShellDir
+        "print" ->ShellCommand.ShellPrint(cmd.args.joinToString(" "))
         else -> ShellCommand.UnknownCommand(cmd.name)
     }
     fun execute(prepared:ShellCommand,cmd: Command ){
@@ -27,6 +28,7 @@ class Shell {
                 dir.listFiles()?.forEach { println(it.name) } ?: println("No such directory/Directory is empty")
             }
             is ShellCommand.ShellDir -> println(currentDir)
+            is ShellCommand.ShellPrint -> println(prepared.msg)
             is ShellCommand.UnknownCommand -> println("Unknown command: ${prepared.cmd}")
         }
         history[(LocalDateTime.now()).toString()] = cmd.raw
