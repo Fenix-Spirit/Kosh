@@ -13,8 +13,8 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib"))
     testImplementation(kotlin("test"))
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
 }
-
 kotlin {
     jvmToolchain(26)
 }
