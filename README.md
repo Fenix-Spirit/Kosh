@@ -1,8 +1,7 @@
-# Kösh
- Kotlin REPL
-
+# Kösh - Kotlin shell
+## Info
+Extra arguments will be `ignored`
 ## Adding a Command
-
 To add a new command to Kösh, you need to update three main areas:
 
 1.  **`src/ShellCommand.kt`**: Add a new `object` or `data class` to the `ShellCommand` sealed class to represent your command.
