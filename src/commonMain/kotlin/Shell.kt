@@ -52,7 +52,7 @@ class Shell {
         "quit","exit" -> ShellCommand.ShellExit
         "history"->ShellCommand.ShellHistory
         "ldir" ->ShellCommand.ShellListDir(if (cmd.args.isEmpty()) currentDir else cmd.args[0])
-        "cdir" ->ShellCommand.ShellChangeDir(cmd.args[0])
+        "cdir" ->if (cmd.args.isEmpty()) ShellCommand.CommandError("cdir: missing argument. Please specify directory") else ShellCommand.ShellChangeDir(cmd.args[0])
         "pwd" ->ShellCommand.ShellDir
         "print" ->ShellCommand.ShellPrint(cmd.args.joinToString(" "))
         else -> ShellCommand.UnknownCommand(cmd.name)
@@ -65,7 +65,14 @@ class Shell {
                     println("$key --> $value")
                 }
             }
-            is ShellCommand.ShellChangeDir -> currentDir=prepared.path
+            is ShellCommand.ShellChangeDir -> {
+                if (SystemFileSystem.exists(Path(prepared.path))) {
+                    currentDir = prepared.path
+                }
+                else{
+                    println("cdir: Directory \"${prepared.path}\" does not exist")
+                }
+            }
             is ShellCommand.ShellListDir -> {
                 val path=Path(prepared.path)
                 SystemFileSystem.list(path).forEach { println(it.name) }
@@ -73,6 +80,7 @@ class Shell {
             is ShellCommand.ShellDir -> println(currentDir)
             is ShellCommand.ShellPrint -> println(prepared.msg)
             is ShellCommand.UnknownCommand -> println("Unknown command: ${prepared.cmd}")
+            is ShellCommand.CommandError -> println(prepared.msg)
         }
         val currTime=Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
         history[currTime.toString()] = cmd.raw
