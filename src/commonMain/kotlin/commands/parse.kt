@@ -1,7 +1,7 @@
 package commands
 
-fun parse(input: String): Command {
-    val parts = input.split(" ")
+fun String.parse(): Command {
+    val parts = this.split(" ")
     val name = parts[0]
     val args = parts.drop(1)
     val flags = mutableListOf<String>()
@@ -10,5 +10,5 @@ fun parse(input: String): Command {
           flags.add(arg)
         }
     }
-    return Command(name, flags, args, input)
+    return Command(name, flags, args, this)
 }
