@@ -30,7 +30,7 @@ class Shell {
                         while (!source.exhausted()){
                             val line=source.readLine()
                             if (line!=null) {
-                                history[line.split("-->")[0]] = line.split("-->").drop(1).joinToString(" ")
+                                history[line.split(" --> ")[0]] = line.split(" --> ").drop(1).joinToString(" ")
                             }
                         }
                         source.close()
