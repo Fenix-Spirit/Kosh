@@ -55,6 +55,7 @@ class Shell {
         "cdir" ->if (cmd.args.isEmpty()) ShellCommand.CommandError("cdir: missing argument. Please specify directory") else ShellCommand.ShellChangeDir(cmd.args[0])
         "pwd" ->ShellCommand.ShellDir
         "print" ->ShellCommand.ShellPrint(cmd.args.joinToString(" "))
+        "help"->ShellCommand.ShellHelp
         else -> ShellCommand.UnknownCommand(cmd.name)
     }
     fun execute(prepared:ShellCommand,cmd: Command ){
@@ -84,6 +85,18 @@ class Shell {
             }
             is ShellCommand.ShellDir -> println(currentDir)
             is ShellCommand.ShellPrint -> println(prepared.msg)
+            is ShellCommand.ShellHelp -> {
+                val commands=listOf<ShellCommand>(
+                    ShellCommand.ShellHistory,
+                    ShellCommand.ShellExit,
+                    ShellCommand.ShellListDir(currentDir),
+                    ShellCommand.ShellChangeDir(currentDir),
+                    ShellCommand.ShellDir,
+                    ShellCommand.ShellPrint(""),
+                    ShellCommand.ShellHelp
+                )
+                commands.forEach { println(it.description) }
+            }
             is ShellCommand.UnknownCommand -> println("Unknown command: ${prepared.cmd}")
             is ShellCommand.CommandError -> println(prepared.msg)
         }
