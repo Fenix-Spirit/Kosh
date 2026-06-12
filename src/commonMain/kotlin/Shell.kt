@@ -75,7 +75,12 @@ class Shell {
             }
             is ShellCommand.ShellListDir -> {
                 val path=Path(prepared.path)
-                SystemFileSystem.list(path).forEach { println(it.name) }
+                if (SystemFileSystem.exists(path)) {
+                    SystemFileSystem.list(path).forEach { println(it.name) }
+                }
+                else{
+                    println("ldir: Directory \"${prepared.path}\" does not exist")
+                }
             }
             is ShellCommand.ShellDir -> println(currentDir)
             is ShellCommand.ShellPrint -> println(prepared.msg)
